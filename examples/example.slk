@@ -1,0 +1,46 @@
+// example code for conlang.
+// This will be way to test the lexer as well as the progress of the project itself
+
+/| I want to be fancy so block comments will be done like this
+ | the bars are not neccesary
+ | this isnt an issue because `|` will never need to be escaped
+\| 
+
+/// doc comments will be done like this and would be used for a potential LSP 
+/// that exists in the future [Should they be tokenized? look into LSP]
+
+fn () -> int main {
+	// basic type system that supports interpoaltion. Interpolation will be
+	// very easy at first
+	let a: int :=  10;
+
+	let b := 9;
+	// id like for this language to be as functional as possible so pretty much 
+	// anything could return a value
+
+	if ( b a < ) {
+	
+		// will just take an integer for now. Will eventually attempt to call 
+		// the print method on the type (oh god this should be a macro shouldnt it)
+		println(a); 
+		
+	} else if ( b a == ) {
+
+		// may look into printing strings before alpha because that would make
+		// debugging very easy
+		println(b);
+
+	} else {
+		return 1;
+	}
+}
+
+// if i want this to be functional it may be worth ditching compilation to C 
+// prior to alpha. In fact I think that should be a really early goal.
+
+// no type interpolation on functions
+fn (lhs: int, rhs: int) -> int subtract {
+	// similar to rust, a line that is not ended by semicolon will be shorthand for return
+	lhs rhs -
+	// compiles to the same thing as `return lhs rhs -;`
+}

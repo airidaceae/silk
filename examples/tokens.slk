@@ -1,0 +1,35 @@
+//tokens
++
+-
+*
+/
+->
+:=
+:
+,
+.
+!=
+==
+<
+>
+<=
+>=
+;
+{
+}
+(
+)
+
+//reserved words
+fn
+let
+mut
+if
+else
+while
+return
+
+//reserved until stdlib exists
+println
+readln
+
