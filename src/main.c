@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
         appendArrayList(program, temp);
     }
     fclose(source);
-    fprintf(stderr, "input gathering complete\n");
+    fprintf(stderr, "input gathering complete\n\n");
 
     fprintf(stderr, "printing source:\n");
     int len = getArrayListLength(program);
