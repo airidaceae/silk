@@ -159,9 +159,9 @@ TokenContext tokenize(ArrayList* program) {
             //reset the error variable and increment our indecies 
             err = 0;
             t--;
+            column += (t-i);
             i = t;
             // fprintf(stderr,"upcoming char is at index %d and is (%c, %d)",i, getArrayList(program, i), getArrayList(program, i));
-            column += i;
         } else if (isLetter(c)) {
             // scan until `isDecimal(c) == 0 && isLetter(c) == 0`
             // int t;
