@@ -30,3 +30,6 @@ int getArrayListLength(ArrayList* list);
 
 /// Frees an ArrayList
 void freeArrayList(ArrayList* list);
+
+/// Prints message and exits with 1 if given a null ptr
+void checkAlloc(void* ptr, char message[]);

@@ -39,9 +39,12 @@ struct NameTable_s {
 
 NameTable *newNameTable() {
     NameTable *temp = calloc(1, sizeof(NameTable));
+    checkAlloc(temp, "Calloc error in newNameTable()\0");
     temp->array = calloc(START_SIZE, sizeof(char));
+    checkAlloc(temp->array, "Calloc error in newNameTable()\0");
     for (int i = 0; i < START_SIZE; i++) {
         temp->array[i] = calloc(IDENTIFIER_LENGTH + 1, sizeof(char));
+        checkAlloc(temp->array[i], "Calloc error in newNameTable()\0");
     }
     temp->length = 0;
     temp->capacity = START_SIZE;
@@ -69,8 +72,10 @@ int getOrAppend(NameTable* table, char* name) {
     if (table->length >= table->capacity) {
         table->capacity *= 2;
         table->array = realloc(table->array, table->capacity * sizeof(char*));
+        checkAlloc(table->array, "Realloc error in getOrAppend()\0");
         for (int i = table->capacity / 2; i < table->capacity; i++) {
             table->array[i] = calloc(IDENTIFIER_LENGTH + 1, sizeof(char));
+            checkAlloc(table->array[i], "Calloc error in getOrAppend()\0");
         }
     }
     strcpy(table->array[table->length], name);

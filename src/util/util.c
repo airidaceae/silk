@@ -16,6 +16,7 @@
 
 #include "util.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 struct ArrayList_s {
@@ -26,7 +27,9 @@ struct ArrayList_s {
 
 ArrayList* newArrayList() {
     ArrayList* temp = calloc(1, sizeof(ArrayList));
+    checkAlloc(temp, "Calloc error in newArrayList()\0");
     temp->array = calloc(1, sizeof(int));
+    checkAlloc(temp->array, "Calloc error in newArrayList()\0");
     temp->length = 0;
     temp->capacity = 1;
     return temp;
@@ -37,6 +40,7 @@ void appendArrayList(ArrayList* list, int item) {
     if( list->length >= list->capacity) {
         list->capacity *= 2;
         list->array = realloc(list->array, list->capacity * sizeof(int));
+        checkAlloc(list->array, "Realloc error in appendArrayList()\0");
         for(int i = list->capacity/2; i < list->capacity - 1; i++) {
             list->array[i] = 0;
         }
@@ -55,6 +59,13 @@ int getArrayListLength(ArrayList* list) {
 void freeArrayList(ArrayList* list) {
     free(list->array);
     free(list);
+}
+
+void checkAlloc(void* ptr, char message[]){
+    if(ptr == NULL) {
+        fprintf(stderr, "%s", message);
+        exit(1);
+    }
 }
 
 
