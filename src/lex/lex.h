@@ -66,6 +66,7 @@ void freeNametable(NameTable* table);
 
 typedef struct TokenContext TokenContext;
 struct TokenContext {
+    int status;
     ArrayList* list;
     NameTable* table;
 };

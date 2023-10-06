@@ -46,6 +46,10 @@ int main(int argc, char* argv[]) {
     }
 
     TokenContext context = tokenize(program);
+    if(context.status != 0) {
+        fprintf(stderr, "Errors occured in lexing stage. Cannot continue further\n");
+        return context.status;
+    }
     ArrayList* tokenList = context.list;
     NameTable* nameTable = context.table;
 

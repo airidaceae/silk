@@ -89,6 +89,8 @@ void freeNameTable(NameTable *table) {
 
 
 TokenContext tokenize(ArrayList* program) {
+    int status;
+    
     // KEYWORDS allows us to check if a string is a keyword easily and get its
     // proper symbol without
     fprintf(stderr, "\nbegin keyword setup\n");
@@ -131,6 +133,7 @@ TokenContext tokenize(ArrayList* program) {
 
                     //set error code to one
                     err = 1;
+                    status = 1;
 
                     // continue scanning until we hit the end of the number so 
                     // that we can also check for an unexpected identifier.
@@ -142,6 +145,7 @@ TokenContext tokenize(ArrayList* program) {
             if(isLetter(getArrayList(program, t))) {
                 fprintf(stderr, "line %2d, column %2d: Unexpected Identifier\n", line, column + (t-i));
                 err = 1;
+                status = 1;
             }
             if(!err) {
                 // fprintf(stderr, "Built number %s\n", curNum);
@@ -247,6 +251,7 @@ TokenContext tokenize(ArrayList* program) {
     fprintf(stderr, "Finished Tokenizing\n");
 
     TokenContext context;
+    context.status = status;
     context.list = tokenList;
     context.table = nameTable;
     return context;
