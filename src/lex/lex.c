@@ -106,6 +106,7 @@ TokenContext tokenize(ArrayList* program) {
     fprintf(stderr, "keyword setup complete\n");
 
     fprintf(stderr, "\n");
+    int err = 0;
     
     NameTable*  nameTable = newNameTable();
     ArrayList* tokenList = newArrayList();
@@ -125,22 +126,34 @@ TokenContext tokenize(ArrayList* program) {
                 curNum[t - i + 1] = '\0'; 
                 
                 if(t - i >= NUM_LENGTH) {
-                    fprintf(stderr, "Number at line %d, column %d too long\n", line, column);
-                    //print an error then scan until the malformed token ends.
-                    for(;isDecimal(c); ++t, c = getArrayList(program, t));
+                    //print our error message
+                    fprintf(stderr, "line %2d, column %2d: Number too long\n", line, column);
 
-                    // skip the stage for adding the identifier to the list
-                    // we do not exit becuase catching all parse errors is 
-                    // useful
-                    goto num_error;
+                    //set error code to one
+                    err = 1;
+
+                    // continue scanning until we hit the end of the number so 
+                    // that we can also check for an unexpected identifier.
+                    for(;isDecimal(c);t++, c = getArrayList(program, t));
+                    break;
                 }
             }
-            //TODO handle unexpected identifies (123abc, 1a1a1a1)
-            // fprintf(stderr, "Built number %s\n", curNum);
-            appendArrayList(tokenList, numsym);
-            appendArrayList(tokenList, atoi(curNum));
-            
-            num_error:
+
+            if(isLetter(getArrayList(program, t))) {
+                fprintf(stderr, "line %2d, column %2d: Unexpected Identifier\n", line, column + (t-i));
+                err = 1;
+            }
+            if(!err) {
+                // fprintf(stderr, "Built number %s\n", curNum);
+                appendArrayList(tokenList, numsym);
+                appendArrayList(tokenList, atoi(curNum));
+            } else {
+                // finish to scanning to get past the malformed token
+                for(;isLetter(c) || isDecimal(c);t++, c = getArrayList(program, t));
+            }
+
+            //reset the error variable and increment our indecies 
+            err = 0;
             t--;
             i = t;
             // fprintf(stderr,"upcoming char is at index %d and is (%c, %d)",i, getArrayList(program, i), getArrayList(program, i));
