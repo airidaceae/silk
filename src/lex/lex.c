@@ -89,7 +89,7 @@ void freeNameTable(NameTable *table) {
 
 
 TokenContext tokenize(ArrayList* program) {
-    int status;
+    int status = 0;
     
     // KEYWORDS allows us to check if a string is a keyword easily and get its
     // proper symbol without
