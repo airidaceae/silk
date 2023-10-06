@@ -24,7 +24,7 @@
 // constants
 #define START_SIZE 16
 #define IDENTIFIER_LENGTH 64
-#define NUM_LENGTH 12
+#define NUM_LENGTH 10
 #define KEYWORD_LENGTH 10
 
 // macros
@@ -91,7 +91,7 @@ void freeNameTable(NameTable *table) {
 TokenContext tokenize(ArrayList* program) {
     // KEYWORDS allows us to check if a string is a keyword easily and get its
     // proper symbol without
-    fprintf(stderr, "begin keyword setup\n");
+    fprintf(stderr, "\nbegin keyword setup\n");
     char KEYWORDS[TOKEN_COUNT + 1][KEYWORD_LENGTH + 1];
     for (int i = 0; i < TOKEN_COUNT; i++) {
         strcpy(KEYWORDS[i], "\0");
@@ -109,15 +109,42 @@ TokenContext tokenize(ArrayList* program) {
     
     NameTable*  nameTable = newNameTable();
     ArrayList* tokenList = newArrayList();
-    for (int i = 0, line = 1, column = 1; i < getArrayListLength(program); i++) {
+    for (int i = 0, line = 1, column = -1; i < getArrayListLength(program); i++) {
         column++;
         char c = getArrayList(program, i);
-        fprintf(stderr, "root level char is %c\n", c);
+        // fprintf(stderr, "root level char is %c\n", c);
 
         if (isDecimal(c)) {
             char curNum[NUM_LENGTH + 1];
+            int t;
+            for(t = i; isDecimal(c);++t, c = getArrayList(program, t)){
+
+                // start building our num and make sure that our nums are always
+                //null terminated
+                curNum[t - i] = c;
+                curNum[t - i + 1] = '\0'; 
+                
+                if(t - i >= NUM_LENGTH) {
+                    fprintf(stderr, "Number at line %d, column %d too long\n", line, column);
+                    //print an error then scan until the malformed token ends.
+                    for(;isDecimal(c); ++t, c = getArrayList(program, t));
+
+                    // skip the stage for adding the identifier to the list
+                    // we do not exit becuase catching all parse errors is 
+                    // useful
+                    goto num_error;
+                }
+            }
+            //TODO handle unexpected identifies (123abc, 1a1a1a1)
+            // fprintf(stderr, "Built number %s\n", curNum);
+            appendArrayList(tokenList, numsym);
+            appendArrayList(tokenList, atoi(curNum));
             
-            
+            num_error:
+            t--;
+            i = t;
+            // fprintf(stderr,"upcoming char is at index %d and is (%c, %d)",i, getArrayList(program, i), getArrayList(program, i));
+            column += i;
         } else if (isLetter(c)) {
             // scan until `isDecimal(c) == 0 && isLetter(c) == 0`
             // int t;
@@ -196,8 +223,9 @@ TokenContext tokenize(ArrayList* program) {
                 break;
             case '\n':
                 line++;
-                column = 1;
-
+                column = 0;
+                break;
+            default:
                 break;
             }
         }
